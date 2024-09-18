@@ -19,9 +19,13 @@ chmod u+rx [SCRIPT_NAME].sh
 ./[SCRIPT_NAME].sh
 ```
 
+The two human unpaired download scripts are significantly larger, and are labled heavy/light_bulk_download respectively. I suggest running these scripts with nohup as the download may take significantly longer.
+
+`nohup bash [SCRIPT_NAME].sh > output.log 2>&1 &`
+
 ## Initial Download Directory
 
-Data downloaded from raw shell scripts are stored in the `/export/shared/cameronhu/oas` directory. The directory has been further subdivided into Paired and Unpaired, and then by organism.
+Data downloaded from raw shell scripts are stored in the `/export/shared/cameronhu/oas` directory. The directory has been further subdivided into Paired and Unpaired, and then by organism. Unpaired sequences have been further subdivided into light and heavy chains.
 
 ## Outline of Steps
 
