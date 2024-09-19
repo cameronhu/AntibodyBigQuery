@@ -1,6 +1,6 @@
-# oas_onboarding
+# Observed Antibody Space Sequence Onboarding
 
-Onboarding of Observed Antibody Space data to Profluent local environmnent.
+Onboarding of the Observed Antibody Space sequencing data to the Profluent HCP environmnent
 
 ## Background
 
