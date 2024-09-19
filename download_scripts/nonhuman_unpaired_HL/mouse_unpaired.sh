@@ -1,0 +1,14 @@
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759678_Heavy_Bulk.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759678_Heavy_IGHA.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759678_Heavy_IGHD.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759678_Heavy_IGHG.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759678_Heavy_IGHM.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759679_Heavy_Bulk.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759679_Heavy_IGHD.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759679_Heavy_IGHG.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759679_Heavy_IGHM.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759680_Heavy_Bulk.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759680_Heavy_IGHA.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759680_Heavy_IGHD.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759680_Heavy_IGHG.csv.gz
+wget https://opig.stats.ox.ac.uk/webapps/ngsdb/unpaired/Greiff_2017/csv/ERR1759680_Heavy_IGHM.csv.gz
