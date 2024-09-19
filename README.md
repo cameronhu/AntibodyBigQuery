@@ -33,3 +33,7 @@ Data downloaded from raw shell scripts are stored in the `/export/shared/cameron
 2. Organize Paired and Unpaired data, and organism data
 3. ETL Data into BigQuery
 4. Explore Dockerization of the process. This may not be relevant as it appears OAS is not regularly updated.
+
+### Download Notes
+- The number of files matches the number of wget lines for the paired sequences and unpaired human heavy/light chains. 
+- The number files and wget commands also corresponds for the unpaired nonhuman sequences.
