@@ -46,7 +46,16 @@ def parse_metadata(data_unit_file: str) -> dict:
 def generate_antibody_data(num_to_generate: int, metadata: dict) -> pd.DataFrame:
     """Generates an Antibody Table for this study. Creates a UUID for each entity in the study,
     links every entity to its metadata (should be the same for every entry in the study),
-    and provides additional data regarding if the data is paired
+    and provides additional data regarding if the data is paired.
+
+    Current implementation is to simply create a new antibody UID for every sequence in the sequence table.
+
+
+    ****************************** Need to implement proper linking of a paired H/L chain ******************************
+
+
+    In the future, can explore clustering options to determine if we want multiple sequences assigned to
+    a single "parent clone antibody".
 
     Args:
         num_to_generate (int): Number of antibody IDs to generate
@@ -73,16 +82,14 @@ def generate_antibody_data(num_to_generate: int, metadata: dict) -> pd.DataFrame
     return antibody_data
 
 
-def parse_sequence_data(data_unit_file: str) -> tuple[pd.DataFrame, pd.DataFrame]:
+def parse_sequence_data(data_unit_file: str) -> pd.DataFrame:
     """Parses actual sequence data from an OAS file and adds a unique identifier for each row
-    Also generates an Antibody Table which links sequence data to metadata
 
     Args:
         data_unit_file (str): path to the OAS sequence file
 
     Returns:
-        tuple[pd.DataFrame, pd.DataFrame]: The first DataFrame is the Sequence Table,
-        the second DataFrame is the Antibody Table linking sequences to metadata
+        pd.DataFrame: Sequence table with UID for each entity, needs to be linked to antibody table
     """
 
     # Read the sequence data starting from the second row
@@ -127,9 +134,11 @@ def parse_file(data_unit_file: str) -> tuple[dict, pd.DataFrame, pd.DataFrame]:
     metadata = parse_metadata(data_unit_file)
 
     # Extract sequence data and generate UID
-    sequence_data = parse_sequence_data(data_unit_file, metadata["file_uid"])
+    sequence_data = parse_sequence_data(data_unit_file)
 
     # Generate an antibody table for this study, linking antibody sequences to metadata
-    antibody_data = generate_antibody_data()
+    antibody_data = generate_antibody_data(len(sequence_data), metadata)
+
+    link_sequence_antibody_data(sequence_data, antibody_data)
 
     return metadata, antibody_data, sequence_data
