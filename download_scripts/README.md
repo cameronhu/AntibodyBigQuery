@@ -16,3 +16,7 @@ The two human unpaired download scripts are significantly larger, and are labled
 ## Initial Download Directory
 
 Data downloaded from raw shell scripts are stored in the `/export/shared/cameronhu/oas` directory. The directory has been further subdivided into Paired and Unpaired, and then by organism. Unpaired sequences have been further subdivided into light and heavy chains.
+
+### Download Notes
+- The number of files matches the number of wget lines for the paired sequences and unpaired human heavy/light chains. 
+- The number files and wget commands also corresponds for the unpaired nonhuman sequences.

@@ -22,18 +22,17 @@ Four major tables exist:
    - Contains metadata that is available with every OAS file
    - Contains a UID for each piece of metadata
    - Metadata provides additional relevant filtering parameters, including Species(Organism), BSource, Vaccination/Disease status, Isotype
-3. **Unpaired Sequences**
+3. **Sequences Table**
    - Contains the sequences and annotations for unpaired heavy or light chains. H/L chain data are organized with the same schema
-4. **Paired Sequences**
-   - Contains paired heavy and light chains. Final schema is similar to a merge of an unpaired heavy/light chain dataset together, with suffixes denoting H/L
+   - Paired chain data will be parsed into individual heavy and light chains and uploaded individually. They will be linked by the same Antibody ID.
 
 ## Outline of Steps
 
 1. Complete raw downloads of all relevant antibody information from OAS: paired, unpaired, human, mouse, etc.
-2. Organize Paired and Unpaired data
+2. Create processing scripts for OAS data
+   - Assign UIDs to every sequence, metadata, and antibody 
+   - Parse H/L chains from the paired sequence data, and properly assign both chains to the same antibody entity
 3. ETL Data into BigQuery
-4. Explore Dockerization of the process. This may not be relevant as it appears OAS is not regularly updated.
-
-### Download Notes
-- The number of files matches the number of wget lines for the paired sequences and unpaired human heavy/light chains. 
-- The number files and wget commands also corresponds for the unpaired nonhuman sequences.
+   - Batching or parallelization of the upload
+4. Querying BigQuery and downloading relevant data
+5. Explore Dockerization and Automation of the whole process
