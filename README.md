@@ -31,7 +31,8 @@ Four major tables exist:
 1. Complete raw downloads of all relevant antibody information from OAS: paired, unpaired, human, mouse, etc.
 2. Create processing scripts for OAS data
    - Assign UIDs to every sequence, metadata, and antibody 
-   - Parse H/L chains from the paired sequence data, and properly assign both chains to the same antibody entity
+   - Match every entity in the sequence table to a single antibody entity
+   - If the data is paired chain data, parse H/L chains out into indidvual sequence entities
 3. ETL Data into BigQuery
    - Batching or parallelization of the upload
 4. Querying BigQuery and downloading relevant data
