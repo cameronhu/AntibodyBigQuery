@@ -43,23 +43,17 @@ def parse_metadata(data_unit_file: str) -> dict:
     return metadata
 
 
-def generate_antibody_data(num_to_generate: int, metadata: dict) -> pd.DataFrame:
+def generate_antibody_data(
+    num_to_generate: int, metadata_uid: int, is_paired: bool
+) -> pd.DataFrame:
     """Generates an Antibody Table for this study. Creates a UUID for each entity in the study,
     links every entity to its metadata (should be the same for every entry in the study),
     and provides additional data regarding if the data is paired.
 
-    Current implementation is to simply create a new antibody UID for every sequence in the sequence table.
-
-
-    ****************************** Need to implement proper linking of a paired H/L chain ******************************
-
-
-    In the future, can explore clustering options to determine if we want multiple sequences assigned to
-    a single "parent clone antibody".
-
     Args:
         num_to_generate (int): Number of antibody IDs to generate
-        metadata (dict): The metadata dict, which contains a UID as an attribute, to assign with each entity
+        metadata (int): The metadata UID to assign to each entity
+        is_paired (bool): If this dataset represents paired H/L chains
 
     Returns:
         pd.DataFrame: Antibody table with Antibody UID, linked Metadata UID, and Is_Paired boolean
@@ -74,51 +68,63 @@ def generate_antibody_data(num_to_generate: int, metadata: dict) -> pd.DataFrame
     antibody_data["antibody_uid"] = antibody_uids
 
     # Assign the same metadata uid to each antibody entity
-    antibody_data["metadata_uid"] = metadata["metadata_uid"]
+    antibody_data["metadata_uid"] = metadata_uid
 
     # Assign Is_Paired boolean if Metadata[Chain] = Paired
-    antibody_data["is_paired"] = metadata["Chain"] == "Paired"
+    antibody_data["is_paired"] = is_paired
 
     return antibody_data
 
 
-def parse_sequence_data(data_unit_file: str) -> pd.DataFrame:
-    """Parses actual sequence data from an OAS file and adds a unique identifier for each row
+def split_paired_sequences(sequence_df: pd.DataFrame) -> pd.DataFrame:
+    """Splits paired sequences into heavy and light chains
+    Reconcatenates them vertically
+
+    Args:
+        sequence_df (pd.DataFrame): _description_
+
+    Returns:
+        pd.DataFrame: _description_
+    """
+
+
+def parse_sequence_antibody_data(
+    data_unit_file: str, metadata: dict
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Parses sequence data from an OAS file and adds a unique identifier for each sequence
+    Creates an Antibody Table and links the sequences to an Antibody ID
+
+    If metadata indicates paired chains, separates the H/L chains and assigns UIDs to each chain
+    However, maintains paired information by linking both the H/L to one antibody entity (UID)
 
     Args:
         data_unit_file (str): path to the OAS sequence file
 
     Returns:
-        pd.DataFrame: Sequence table with UID for each entity, needs to be linked to antibody table
+        pd.DataFrame: Sequence table with UID for each entity, already linked to antibody table
     """
+
+    # Determine if the dataset is paired or unpaired
+    is_paired = metadata["Chain"] == "Paired"
+    metadata_uid = metadata["metadata_uid"]
 
     # Read the sequence data starting from the second row
     sequence_df = pd.read_csv(data_unit_file, header=1)
 
-    # Number of sequences in this df
+    # Number of unpaired or paired sequences in the original dataset
     num_seqs = len(sequence_df)
+
+    # Generate an antibody table for this study, linking antibody sequences to metadata. Link to the sequences
+    antibody_df = generate_antibody_data(len(sequence_df), metadata_uid, is_paired)
+    sequence_df["antibody_uid"] = antibody_df["antibody_uid"]
+
+    if is_paired:
+        split_paired_sequences(sequence_df)
 
     # Add a UID column for each sequence row
     sequence_df["sequence_uid"] = generate_uid_list(num_seqs)
 
-    return sequence_df
-
-
-def link_sequence_antibody_data(
-    sequence_data: pd.DataFrame, antibody_data: pd.DataFrame
-) -> None:
-    """Given a Sequence df and Antibody df, link each sequence to an Antibody UID
-
-    Args:
-        sequence_data (pd.DataFrame): Df of sequences, with annotation data from OAS
-        antibody_data (pd.DataFrame): Df of antibodies, with metadata UIDs to link
-    """
-
-    # Link sequences to antibodies and metadata
-    # sequence_data["antibody_uid"] = antibody_data["antibody_uid"]
-    sequence_data.insert(0, "antibody_uid", antibody_data["antibody_uid"])
-
-    return
+    return sequence_df, antibody_df
 
 
 def parse_file(data_unit_file: str) -> tuple[dict, pd.DataFrame, pd.DataFrame]:
@@ -136,18 +142,7 @@ def parse_file(data_unit_file: str) -> tuple[dict, pd.DataFrame, pd.DataFrame]:
     # Extract metadata and add a UID
     metadata = parse_metadata(data_unit_file)
 
-    # If paired chains, run paired extraction workflow
-    if metadata["Chain"] == "Paired":
-        sequence_data = parse_paired_data(data_unit_file)
-
-    # If unpaired, run standard workflow
-
     # Extract sequence data and generate UID
-    sequence_data = parse_sequence_data(data_unit_file)
+    sequence_df, antibody_df = parse_sequence_antibody_data(data_unit_file, metadata)
 
-    # Generate an antibody table for this study, linking antibody sequences to metadata
-    antibody_data = generate_antibody_data(len(sequence_data), metadata)
-
-    link_sequence_antibody_data(sequence_data, antibody_data)
-
-    return metadata, antibody_data, sequence_data
+    return metadata, antibody_df, sequence_df
