@@ -115,23 +115,32 @@ def link_sequence_antibody_data(
     """
 
     # Link sequences to antibodies and metadata
-    sequence_data["antibody_uid"] = antibody_data["antibody_uid"]
+    # sequence_data["antibody_uid"] = antibody_data["antibody_uid"]
+    sequence_data.insert(0, "antibody_uid", antibody_data["antibody_uid"])
 
     return
 
 
 def parse_file(data_unit_file: str) -> tuple[dict, pd.DataFrame, pd.DataFrame]:
     """Parses a given OAS file and extracts both its metadata and sequence data
+    Creates an antibody table linking sequences to their metadata
+    Parses sequence data and links to antibodies differently if the data is paired chain data
 
     Args:
         data_unit_file (str): path to the OAS sequence file
 
     Returns:
-        tuple[dict, pd.DataFrame]: tuple of metadata (with UID) and sequence data (with UIDs)
+        tuple[dict, pd.DataFrame, pd.DataFrame]: tuple of metadata (with UID) and sequence data (with UIDs)
     """
 
     # Extract metadata and add a UID
     metadata = parse_metadata(data_unit_file)
+
+    # If paired chains, run paired extraction workflow
+    if metadata["Chain"] == "Paired":
+        sequence_data = parse_paired_data(data_unit_file)
+
+    # If unpaired, run standard workflow
 
     # Extract sequence data and generate UID
     sequence_data = parse_sequence_data(data_unit_file)
