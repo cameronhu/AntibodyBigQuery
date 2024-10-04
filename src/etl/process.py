@@ -77,15 +77,19 @@ def generate_antibody_data(
 
 
 def split_paired_sequences(sequence_df: pd.DataFrame) -> pd.DataFrame:
-    """Splits paired sequences into heavy and light chains
-    Reconcatenates them vertically
+    """Splits paired sequences into heavy and light chains; reconcatenates them vertically
+    Retains pairing of heavy and light chains through linking to the same Antibody UID
 
     Args:
-        sequence_df (pd.DataFrame): _description_
+        sequence_df (pd.DataFrame): paired sequence df to split
 
     Returns:
-        pd.DataFrame: _description_
+        pd.DataFrame: New dataframe with heavy chains on top, corresponding light chains stacked below
     """
+    # Should be 198 columns: 99 for each chain, + 1 for Antibody UID
+    assert len(sequence_df) == 199
+
+    return
 
 
 def parse_sequence_antibody_data(
@@ -119,7 +123,7 @@ def parse_sequence_antibody_data(
     sequence_df["antibody_uid"] = antibody_df["antibody_uid"]
 
     if is_paired:
-        split_paired_sequences(sequence_df)
+        sequence_df = split_paired_sequences(sequence_df)
 
     # Add a UID column for each sequence row
     sequence_df["sequence_uid"] = generate_uid_list(num_seqs)
