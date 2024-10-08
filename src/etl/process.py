@@ -87,7 +87,7 @@ def split_paired_sequences(sequence_df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: New dataframe with heavy chains on top, corresponding light chains stacked below
     """
     # Should be 198 columns: 99 for each chain, + 1 for Antibody UID
-    # assert len(sequence_df) == 199
+    assert sequence_df.shape[1] == 199
 
     return sequence_df
 
