@@ -90,7 +90,36 @@ class OASDataProcessor:
         )
         return antibody_data
 
-    def split_paired_sequences(self, sequence_df: pd.DataFrame) -> pd.DataFrame:
+    def generate_individual_chain_df(
+        self, sequence_df: pd.DataFrame, is_heavy: bool
+    ) -> pd.DataFrame:
+        """Splits a dataframe based off the given columns, then drops the suffixes
+        Appends the Antibody UID and the Chain type to the final dataframe (in that order)
+
+        Args:
+            sequence_df (pd.DataFrame): Original full dataframe, with Antibody UID as the only non-mirrored column
+            is_heavy (bool): if the chain to be parsed is heavy, or is light
+
+        Returns:
+            pd.DataFrame: Df with only the heavy or light chain data, with antibody_id and Chain columns appended
+        """
+
+        antibody_uid = sequence_df["antibody_id"]
+
+        if is_heavy:
+            suffix = "_heavy"
+        else:
+            suffix = "_light"
+
+        columns = sequence_df.columns[sequence_df.columns.str.endswith(suffix)]
+
+        df = sequence_df[columns].copy()
+        df.columns = df.columns.str.replace(suffix, "")
+        df["antibody_id"] = antibody_uid
+
+        return df
+
+    def process_paired_sequences(self, sequence_df: pd.DataFrame) -> pd.DataFrame:
         """Splits paired sequences into heavy and light chains; reconcatenates them vertically
         Retains pairing of heavy and light chains through linking to the same Antibody UID.
         Also retains heavy/light chain information that was encoded through column subscripts
@@ -111,11 +140,16 @@ class OASDataProcessor:
         # Concatenate the heavy and light dfs vertically
         # Return a single df
 
-        heavy_columns = sequence_df.columns[sequence_df.columns.str.endswith("_heavy")]
-        light_columns = sequence_df.columns[sequence_df.columns.str.endswith("_light")]
-        antibody_uid = sequence_df["antibody_id"]
+        # Create the heavy chain df
+        heavy_df = self.generate_individual_chain_df(sequence_df, is_heavy=True)
 
-        return sequence_df
+        # Create the light chain df
+        light_df = self.generate_individual_chain_df(sequence_df, is_heavy=False)
+
+        return_df = pd.concat([heavy_df, light_df])
+        return_df.reset_index(drop=True, inplace=True)
+
+        return return_df
 
     def parse_sequence_antibody_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         """Parses sequence data from an OAS file and adds a unique identifier for each sequence
@@ -135,7 +169,7 @@ class OASDataProcessor:
         sequence_df["antibody_id"] = antibody_df["antibody_id"]
 
         if self.is_paired:
-            sequence_df = self.split_paired_sequences(sequence_df)
+            sequence_df = self.process_paired_sequences(sequence_df)
         else:
             sequence_df["Chain"] = self.metadata["Chain"]
             sequence_df["Isotype"] = self.metadata["Isotype"]
