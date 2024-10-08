@@ -104,12 +104,16 @@ class OASDataProcessor:
         # Splitting logic goes here
 
         # First, define the column indexes for the heavy and light chains
-        # Split the heavy and light chain columns by their index
-        # Retain the remaining index (the antibody UID), and save it to be added to both split heavy and light dfs
+        # Split the heavy and light chain columns by their suffixes
+        # Retain the remaining column (the antibody UID), and save it to be added to both split heavy and light dfs
         # For each heavy and light df, remove the subscripts and retain it as the ["Chain"] column
         # Add the Antibody UIDs to both heavy and light df: should be in the same order
         # Concatenate the heavy and light dfs vertically
         # Return a single df
+
+        heavy_columns = sequence_df.columns[sequence_df.columns.str.endswith("_heavy")]
+        light_columns = sequence_df.columns[sequence_df.columns.str.endswith("_light")]
+        antibody_uid = sequence_df["antibody_id"]
 
         return sequence_df
 
@@ -133,11 +137,11 @@ class OASDataProcessor:
         if self.is_paired:
             sequence_df = self.split_paired_sequences(sequence_df)
         else:
-            sequence_df["Isotype"] = self.metadata["Isotype"]
             sequence_df["Chain"] = self.metadata["Chain"]
+            sequence_df["Isotype"] = self.metadata["Isotype"]
             sequence_df["sequence_id"] = self.generate_uid_list(num_seqs)
 
-        sequence_df["Organism"] = self.metadata["Organism"]
+        sequence_df["Species"] = self.metadata["Species"]
 
         return sequence_df, antibody_df
 
