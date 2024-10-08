@@ -4,6 +4,22 @@ import uuid
 
 
 class OASDataProcessor:
+    """
+    Processing class for a single OAS file, adhering to the Antibody Database ERD.
+
+    Takes a raw OAS file and splits the data into metadata, a linking antibody table, and a sequence table.
+    Assigns a UID to every unpaired sequence, and retains the UID from the OAS paired sequences.
+    If the file is a paired sequence, reformats the table to have the
+    heavy and light chains vertically stacked (instead of horizontally concatenated).
+
+    Attributes:
+        data_unit_file (str): path to the OAS file to be processed
+        metadata (json): metadata json associated with the file
+        metadata_uid (int): UID of the metadata
+        is_paired (bool): paired or unpaired chain type of the file being processed
+
+    """
+
     def __init__(self, data_unit_file: str):
         """Initializes the OAS data processor with a given OAS sequence file.
 
@@ -76,7 +92,8 @@ class OASDataProcessor:
 
     def split_paired_sequences(self, sequence_df: pd.DataFrame) -> pd.DataFrame:
         """Splits paired sequences into heavy and light chains; reconcatenates them vertically
-        Retains pairing of heavy and light chains through linking to the same Antibody UID
+        Retains pairing of heavy and light chains through linking to the same Antibody UID.
+        Also retains heavy/light chain information that was encoded through column subscripts
 
         Args:
             sequence_df (pd.DataFrame): paired sequence df to split
@@ -85,6 +102,14 @@ class OASDataProcessor:
             pd.DataFrame: New dataframe with heavy chains on top, corresponding light chains stacked below
         """
         # Splitting logic goes here
+
+        # First, define the column indexes for the heavy and light chains
+        # Split the heavy and light chain columns by their index
+        # Retain the remaining index (the antibody UID), and save it to be added to both split heavy and light dfs
+        # For each heavy and light df, remove the subscripts and retain it as the ["Chain"] column
+        # Add the Antibody UIDs to both heavy and light df: should be in the same order
+        # Concatenate the heavy and light dfs vertically
+        # Return a single df
         return sequence_df
 
     def parse_sequence_antibody_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -108,7 +133,10 @@ class OASDataProcessor:
             sequence_df = self.split_paired_sequences(sequence_df)
         else:
             sequence_df["Isotype"] = self.metadata["Isotype"]
+            sequence_df["Chain"] = self.metadata["Chain"]
             sequence_df["sequence_id"] = self.generate_uid_list(num_seqs)
+
+        sequence_df["Organism"] = self.metadata["Organism"]
 
         return sequence_df, antibody_df
 
