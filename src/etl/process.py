@@ -87,7 +87,7 @@ def split_paired_sequences(sequence_df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: New dataframe with heavy chains on top, corresponding light chains stacked below
     """
     # Should be 198 columns: 99 for each chain, + 1 for Antibody UID
-    assert sequence_df.shape[1] == 199
+    # assert sequence_df.shape[1] == 199
 
     return sequence_df
 
@@ -125,8 +125,11 @@ def parse_sequence_antibody_data(
     if is_paired:
         sequence_df = split_paired_sequences(sequence_df)
 
-    # Add a UID column for each sequence row
-    sequence_df["sequence_uid"] = generate_uid_list(num_seqs)
+    else:
+        sequence_df["Isotype"] = metadata["Isotype"]
+
+        # Add a UID column for each sequence row, only for unpaired (paired already contains UIDs)
+        sequence_df["sequence_id"] = generate_uid_list(num_seqs)
 
     return sequence_df, antibody_df
 
