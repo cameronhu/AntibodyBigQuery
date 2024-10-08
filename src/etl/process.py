@@ -15,7 +15,7 @@ class OASDataProcessor:
     Attributes:
         data_unit_file (str): path to the OAS file to be processed
         metadata (json): metadata json associated with the file
-        metadata_uid (int): UID of the metadata
+        metadata_id (int): UID of the metadata
         is_paired (bool): paired or unpaired chain type of the file being processed
 
     """
@@ -28,7 +28,7 @@ class OASDataProcessor:
         """
         self.data_unit_file = data_unit_file
         self.metadata = self.parse_metadata()
-        self.metadata_uid = self.metadata["metadata_uid"]
+        self.metadata_id = self.metadata["metadata_id"]
         self.is_paired = self.metadata["Chain"] == "Paired"
 
     def generate_uid(self) -> str:
@@ -63,7 +63,7 @@ class OASDataProcessor:
         metadata = json.loads(metadata)
 
         # Add a UID to the metadata
-        metadata["metadata_uid"] = self.generate_uid()
+        metadata["metadata_id"] = self.generate_uid()
 
         return metadata
 
@@ -83,8 +83,8 @@ class OASDataProcessor:
         antibody_uids = self.generate_uid_list(num_to_generate)
         antibody_data = pd.DataFrame(
             {
-                "antibody_uid": antibody_uids,
-                "metadata_uid": self.metadata_uid,
+                "antibody_id": antibody_uids,
+                "metadata_id": self.metadata_id,
                 "is_paired": self.is_paired,
             }
         )
@@ -110,6 +110,7 @@ class OASDataProcessor:
         # Add the Antibody UIDs to both heavy and light df: should be in the same order
         # Concatenate the heavy and light dfs vertically
         # Return a single df
+
         return sequence_df
 
     def parse_sequence_antibody_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -127,7 +128,7 @@ class OASDataProcessor:
 
         # Generate an antibody table for this study, linking antibody sequences to metadata
         antibody_df = self.generate_antibody_data(num_seqs)
-        sequence_df["antibody_uid"] = antibody_df["antibody_uid"]
+        sequence_df["antibody_id"] = antibody_df["antibody_id"]
 
         if self.is_paired:
             sequence_df = self.split_paired_sequences(sequence_df)
