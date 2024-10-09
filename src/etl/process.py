@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import uuid
+from constants import *
 
 
 class OASDataProcessor:
@@ -17,6 +18,7 @@ class OASDataProcessor:
         metadata (json): metadata json associated with the file
         metadata_id (int): UID of the metadata
         is_paired (bool): paired or unpaired chain type of the file being processed
+        columnar_order
 
     """
 
@@ -108,14 +110,17 @@ class OASDataProcessor:
 
         if is_heavy:
             suffix = "_heavy"
+            chain = "Heavy"
         else:
             suffix = "_light"
+            chain = "Light"
 
         columns = sequence_df.columns[sequence_df.columns.str.endswith(suffix)]
 
         df = sequence_df[columns].copy()
         df.columns = df.columns.str.replace(suffix, "")
         df["antibody_id"] = antibody_uid
+        df["Chain"] = chain
 
         return df
 
@@ -188,4 +193,5 @@ class OASDataProcessor:
             tuple[dict, pd.DataFrame, pd.DataFrame]: tuple of metadata (with UID) and sequence data (with UIDs)
         """
         sequence_df, antibody_df = self.parse_sequence_antibody_data()
+        sequence_df = sequence_df.reindex(columns=COLUMN_ORDER)
         return self.metadata, antibody_df, sequence_df
