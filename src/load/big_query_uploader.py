@@ -1,78 +1,89 @@
 from google.cloud import bigquery
+import pandas as pd
+from typing import Tuple
 
 
-class BigQueryTableCreator:
+class BigQueryUploader:
     """
-    Class responsible for creating the BigQuery tables for the OAS data.
+    Class responsible for uploading processed OAS data to Google BigQuery.
+
+    Takes processed metadata, antibody, and sequence dataframes and uploads them
+    to their respective tables in BigQuery, ensuring relationships between the tables
+    are preserved.
 
     Attributes:
-        project_id (str): GCP project ID
-        dataset_id (str): BigQuery dataset ID where the tables will be created
+        project_id (str): GCP project ID where the BigQuery dataset is located
+        dataset_id (str): BigQuery dataset ID where the tables reside
         client (bigquery.Client): BigQuery client instance for interaction
     """
 
     def __init__(self, project_id: str, dataset_id: str):
+        """Initializes the BigQueryUploader with the project and dataset information.
+
+        Args:
+            project_id (str): GCP project ID
+            dataset_id (str): BigQuery dataset ID
+        """
         self.project_id = project_id
         self.dataset_id = dataset_id
         self.client = bigquery.Client(project=self.project_id)
 
-    def create_metadata_table(self):
-        """Creates the Metadata table in BigQuery."""
+    def upload_metadata(self, metadata: dict) -> None:
+        """Uploads metadata to the Metadata table in BigQuery.
+
+        Args:
+            metadata (dict): Metadata dictionary with the structure {column_name: value}
+        """
         table_id = f"{self.project_id}.{self.dataset_id}.metadata"
+        metadata_df = pd.DataFrame([metadata])
+        self._upload_dataframe(metadata_df, table_id)
 
-        schema = [
-            bigquery.SchemaField("metadata_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("Species", "STRING", mode="NULLABLE"),
-            bigquery.SchemaField("Chain", "STRING", mode="NULLABLE"),
-            bigquery.SchemaField("Isotype", "STRING", mode="NULLABLE"),
-            # Add additional metadata fields as needed
-        ]
+    def upload_antibodies(self, antibody_df: pd.DataFrame) -> None:
+        """Uploads antibody data to the Antibody table in BigQuery.
 
-        table = bigquery.Table(table_id, schema=schema)
-        self.client.create_table(table)
-        print(f"Created table {table_id}")
-
-    def create_antibody_table(self):
-        """Creates the Antibody table in BigQuery."""
+        Args:
+            antibody_df (pd.DataFrame): DataFrame containing antibody data
+        """
         table_id = f"{self.project_id}.{self.dataset_id}.antibody"
+        self._upload_dataframe(antibody_df, table_id)
 
-        schema = [
-            bigquery.SchemaField("antibody_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("metadata_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("is_paired", "BOOLEAN", mode="REQUIRED"),
-        ]
+    def upload_sequences(self, sequence_df: pd.DataFrame) -> None:
+        """Uploads sequence data to the Sequence table in BigQuery.
 
-        table = bigquery.Table(table_id, schema=schema)
-        self.client.create_table(table)
-        print(f"Created table {table_id}")
-
-    def create_sequence_table(self):
-        """Creates the Sequence table in BigQuery."""
+        Args:
+            sequence_df (pd.DataFrame): DataFrame containing sequence data
+        """
         table_id = f"{self.project_id}.{self.dataset_id}.sequence"
+        self._upload_dataframe(sequence_df, table_id)
 
-        schema = [
-            bigquery.SchemaField("sequence_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("antibody_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("Chain", "STRING", mode="REQUIRED"),
-            # Add additional sequence-specific fields (e.g., sequence data, annotations)
-            bigquery.SchemaField("Species", "STRING", mode="NULLABLE"),
-            bigquery.SchemaField("Isotype", "STRING", mode="NULLABLE"),
-            # Add any other fields that will be parsed from the sequence data
-        ]
+    def _upload_dataframe(self, df: pd.DataFrame, table_id: str) -> None:
+        """Uploads a DataFrame to the specified BigQuery table.
 
-        table = bigquery.Table(table_id, schema=schema)
-        self.client.create_table(table)
-        print(f"Created table {table_id}")
+        Args:
+            df (pd.DataFrame): DataFrame to upload
+            table_id (str): Full BigQuery table ID in the format 'project.dataset.table'
+        """
+        job_config = bigquery.LoadJobConfig(
+            write_disposition=bigquery.WriteDisposition.WRITE_APPEND
+        )
+        job = self.client.load_table_from_dataframe(df, table_id, job_config=job_config)
+        job.result()  # Wait for the job to complete
 
-    def create_all_tables(self):
-        """Creates all tables: Metadata, Antibody, and Sequence."""
-        self.create_metadata_table()
-        self.create_antibody_table()
-        self.create_sequence_table()
+    def upload_all(
+        self, metadata: dict, antibody_df: pd.DataFrame, sequence_df: pd.DataFrame
+    ) -> None:
+        """Uploads all three data tables (metadata, antibody, sequence) to BigQuery in the correct order.
 
+        Args:
+            metadata (dict): Metadata dictionary
+            antibody_df (pd.DataFrame): Antibody table DataFrame
+            sequence_df (pd.DataFrame): Sequence table DataFrame
+        """
+        # 1. Upload metadata first (as Antibody and Sequence depend on it)
+        self.upload_metadata(metadata)
 
-# Example usage
-table_creator = BigQueryTableCreator(
-    project_id="your-gcp-project-id", dataset_id="your-dataset-id"
-)
-table_creator.create_all_tables()
+        # 2. Upload antibody table (sequence table depends on it)
+        self.upload_antibodies(antibody_df)
+
+        # 3. Finally, upload the sequence table
+        self.upload_sequences(sequence_df)
