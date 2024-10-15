@@ -1,6 +1,8 @@
 from google.cloud import bigquery
 import pandas as pd
 from typing import Tuple
+from constants import *
+import json
 
 
 class BigQueryUploader:
@@ -87,3 +89,18 @@ class BigQueryUploader:
 
         # 3. Finally, upload the sequence table
         self.upload_sequences(sequence_df)
+
+
+uploader = BigQueryUploader(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
+
+with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
+    data = f.read()
+metadata = json.loads(data)
+
+
+antibody_df = pd.read_csv(
+    "/home/cameronhu/oas_onboarding/data/heavy_antibody_table.csv"
+)
+seq_df = pd.read_csv("/home/cameronhu/oas_onboarding/data/heavy_seq_table.csv")
+
+uploader.upload_all(metadata, antibody_df, seq_df)
