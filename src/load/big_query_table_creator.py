@@ -1,4 +1,6 @@
 from google.cloud import bigquery
+from google.oauth2 import service_account
+from constants import *
 
 
 class BigQueryTableCreator:
@@ -71,8 +73,6 @@ class BigQueryTableCreator:
         self.create_sequence_table()
 
 
-# Example usage
-table_creator = BigQueryTableCreator(
-    project_id="your-gcp-project-id", dataset_id="your-dataset-id"
-)
+table_creator = BigQueryTableCreator(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
 table_creator.create_all_tables()
+# table_creator.create_metadata_table()
