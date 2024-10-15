@@ -13,10 +13,18 @@ class BigQueryTableCreator:
         client (bigquery.Client): BigQuery client instance for interaction
     """
 
-    def __init__(self, project_id: str, dataset_id: str):
+    def __init__(self, project_id: str, dataset_id: str, credentials=None):
+        """
+        Initializes the BigQueryTableCreator class.
+
+        Args:
+            project_id (str): The GCP project ID.
+            dataset_id (str): The BigQuery dataset ID.
+            credentials (google.auth.Credentials): Optional custom credentials for the BigQuery client.
+        """
         self.project_id = project_id
         self.dataset_id = dataset_id
-        self.client = bigquery.Client(project=self.project_id)
+        self.client = bigquery.Client(project=self.project_id, credentials=credentials)
 
     def create_metadata_table(self):
         """Creates the Metadata table in BigQuery."""
