@@ -90,9 +90,9 @@ class BigQueryUploader:
         self.upload_sequences(sequence_df)
 
 
-uploader = BigQueryUploader(
-    project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
-)
+# uploader = BigQueryUploader(
+#     project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
+# )
 
 # with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
 #     data = f.read()
