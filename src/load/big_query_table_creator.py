@@ -30,13 +30,7 @@ class BigQueryTableCreator:
         """Creates the Metadata table in BigQuery."""
         table_id = f"{self.project_id}.{self.dataset_id}.metadata"
 
-        schema = [
-            bigquery.SchemaField("metadata_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("Species", "STRING", mode="NULLABLE"),
-            bigquery.SchemaField("Chain", "STRING", mode="NULLABLE"),
-            bigquery.SchemaField("Isotype", "STRING", mode="NULLABLE"),
-            # Add additional metadata fields as needed
-        ]
+        schema = METADATA_SCHEMA
 
         table = bigquery.Table(table_id, schema=schema)
         self.client.create_table(table)
@@ -46,13 +40,10 @@ class BigQueryTableCreator:
         """Creates the Antibody table in BigQuery."""
         table_id = f"{self.project_id}.{self.dataset_id}.antibody"
 
-        schema = [
-            bigquery.SchemaField("antibody_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("metadata_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("is_paired", "BOOLEAN", mode="REQUIRED"),
-        ]
+        schema = ANTIBODY_SCHEMA
 
         table = bigquery.Table(table_id, schema=schema)
+        table.clustering_fields = ["is_paired"]
         self.client.create_table(table)
         print(f"Created table {table_id}")
 
@@ -60,17 +51,13 @@ class BigQueryTableCreator:
         """Creates the Sequence table in BigQuery."""
         table_id = f"{self.project_id}.{self.dataset_id}.sequence"
 
-        schema = [
-            bigquery.SchemaField("sequence_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("antibody_id", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("Chain", "STRING", mode="REQUIRED"),
-            # Add additional sequence-specific fields (e.g., sequence data, annotations)
-            bigquery.SchemaField("Species", "STRING", mode="NULLABLE"),
-            bigquery.SchemaField("Isotype", "STRING", mode="NULLABLE"),
-            # Add any other fields that will be parsed from the sequence data
-        ]
+        schema = SEQUENCE_SCHEMA
 
         table = bigquery.Table(table_id, schema=schema)
+
+        # Create clustering based off species, chain, isotype
+        table.clustering_fields = ["Species", "Chain", "Isotype"]
+
         self.client.create_table(table)
         print(f"Created table {table_id}")
 
@@ -83,4 +70,3 @@ class BigQueryTableCreator:
 
 table_creator = BigQueryTableCreator(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
 table_creator.create_all_tables()
-# table_creator.create_metadata_table()

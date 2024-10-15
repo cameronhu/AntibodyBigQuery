@@ -93,14 +93,19 @@ class BigQueryUploader:
 
 uploader = BigQueryUploader(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
 
-with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
-    data = f.read()
-metadata = json.loads(data)
+# with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
+#     data = f.read()
+# metadata = json.loads(data)
 
 
-antibody_df = pd.read_csv(
-    "/home/cameronhu/oas_onboarding/data/heavy_antibody_table.csv"
-)
-seq_df = pd.read_csv("/home/cameronhu/oas_onboarding/data/heavy_seq_table.csv")
+# antibody_df = pd.read_csv(
+#     "/home/cameronhu/oas_onboarding/data/heavy_antibody_table.csv", index_col=0
+# )
+# seq_df = pd.read_csv(
+#     "/home/cameronhu/oas_onboarding/data/heavy_seq_table.csv", index_col=0
+# )
 
-uploader.upload_all(metadata, antibody_df, seq_df)
+# uploader.upload_all(metadata, antibody_df, seq_df)
+
+table = uploader.client.get_table(f"{GCP_PROJECT_ID}.{DATASET_ID}.antibody")
+print(table.schema)
