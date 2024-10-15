@@ -1,4 +1,4 @@
-# Process module
+# Transform Subpackage
 
 Processing of the raw OAS data file into the format described by the Antibody ERD is handled by the `OASDataProcesser` class. The `OASDataProcessor` is initialized with a path to the OAS file to be processed. Based off the metadata included in the file, the data is processed by either the paired or unpaired workflow. The final output of either input file type is the same, with each sequence having a unique identifier, as well as an antibody entity to which it is linked to. Each antibody entity is linked to its relevant metadata. 
 

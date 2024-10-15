@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oas_pipeline"  # Name of your package
+version = "0.1.0"      # Version number
+description = "A package to process and upload OAS data to BigQuery"
+authors = [
+    {name = "Cameron Hu", email = "chu@profluent.bio"}
+]
+readme = "README.md"
+requires-python = ">=3.6"
+
+[project.optional-dependencies]
+dev = ["pytest", "black"]  # Development dependencies, optional
+
+[project.dependencies]
+pandas = "^2.0"              # Package dependencies
+google-cloud-bigquery = "^3.0"
+
+[tool.setuptools]
+packages = ["load", "transform"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
