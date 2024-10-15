@@ -1,7 +1,6 @@
 from google.cloud import bigquery
 import pandas as pd
-from typing import Tuple
-from constants import *
+import load.constants as constants
 import json
 
 
@@ -91,7 +90,9 @@ class BigQueryUploader:
         self.upload_sequences(sequence_df)
 
 
-uploader = BigQueryUploader(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
+uploader = BigQueryUploader(
+    project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
+)
 
 # with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
 #     data = f.read()
@@ -107,5 +108,7 @@ uploader = BigQueryUploader(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
 
 # uploader.upload_all(metadata, antibody_df, seq_df)
 
-table = uploader.client.get_table(f"{GCP_PROJECT_ID}.{DATASET_ID}.antibody")
-print(table.schema)
+# table = uploader.client.get_table(
+#     f"{constants.GCP_PROJECT_ID}.{constants.DATASET_ID}.antibody"
+# )
+# print(table.schema)

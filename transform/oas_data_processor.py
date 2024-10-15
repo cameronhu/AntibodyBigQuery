@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 import uuid
-from constants import *
+from transform.constants import COLUMN_ORDER
 
 
 class OASDataProcessor:

@@ -1,5 +1,5 @@
 from google.cloud import bigquery
-from constants import *
+import load.constants as constants
 
 
 class BigQueryTableCreator:
@@ -29,7 +29,7 @@ class BigQueryTableCreator:
         """Creates the Metadata table in BigQuery."""
         table_id = f"{self.project_id}.{self.dataset_id}.metadata"
 
-        schema = METADATA_SCHEMA
+        schema = constants.METADATA_SCHEMA
 
         table = bigquery.Table(table_id, schema=schema)
         self.client.create_table(table)
@@ -39,7 +39,7 @@ class BigQueryTableCreator:
         """Creates the Antibody table in BigQuery."""
         table_id = f"{self.project_id}.{self.dataset_id}.antibody"
 
-        schema = ANTIBODY_SCHEMA
+        schema = constants.ANTIBODY_SCHEMA
 
         table = bigquery.Table(table_id, schema=schema)
         table.clustering_fields = ["is_paired"]
@@ -50,7 +50,7 @@ class BigQueryTableCreator:
         """Creates the Sequence table in BigQuery."""
         table_id = f"{self.project_id}.{self.dataset_id}.sequence"
 
-        schema = SEQUENCE_SCHEMA
+        schema = constants.SEQUENCE_SCHEMA
 
         table = bigquery.Table(table_id, schema=schema)
 
@@ -67,5 +67,7 @@ class BigQueryTableCreator:
         self.create_sequence_table()
 
 
-table_creator = BigQueryTableCreator(project_id=GCP_PROJECT_ID, dataset_id=DATASET_ID)
+table_creator = BigQueryTableCreator(
+    project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
+)
 table_creator.create_all_tables()
