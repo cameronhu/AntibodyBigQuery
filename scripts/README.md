@@ -31,3 +31,10 @@ Processing and uploading of 1 files per paired, heavy, and light chains complete
  Heavy chain processing of 2 took: 9.48 seconds (process: 0.00 seconds, upload: 9.48 seconds)
  Light chain processing of 4098 took: 10.42 seconds (process: 0.21 seconds, upload: 10.21 seconds)
  ```
+
+ # Next Steps
+
+ Confirmed that the processing portion is not the bottleneck, but the upload into Google BigQuery is. Thus, should look into optimized/alternative uploading methods:
+
+ - Potentially upload all the files into GCP Buckets first 
+ - Concatentate individual dataframes into a larger dataframe, with some limit for how long the dataframe will be. This will decrease the number of individual calls to upload to BigQuery but increase the amount of data uploaded per call.
