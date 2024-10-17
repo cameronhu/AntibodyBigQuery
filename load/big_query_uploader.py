@@ -16,7 +16,14 @@ class BigQueryUploader:
         project_id (str): GCP project ID where the BigQuery dataset is located
         dataset_id (str): BigQuery dataset ID where the tables reside
         client (bigquery.Client): BigQuery client instance for interaction
+
+    Instance Variables:
+        job_config (bigquery.LoadJobConfig): LoadJobConfig to be passed in to every upload, append only
     """
+
+    job_config = bigquery.LoadJobConfig(
+        write_disposition=bigquery.WriteDisposition.WRITE_APPEND
+    )
 
     def __init__(self, project_id: str, dataset_id: str):
         """Initializes the BigQueryUploader with the project and dataset information.
@@ -64,10 +71,9 @@ class BigQueryUploader:
             df (pd.DataFrame): DataFrame to upload
             table_id (str): Full BigQuery table ID in the format 'project.dataset.table'
         """
-        job_config = bigquery.LoadJobConfig(
-            write_disposition=bigquery.WriteDisposition.WRITE_APPEND
+        job = self.client.load_table_from_dataframe(
+            df, table_id, job_config=BigQueryUploader.job_config
         )
-        job = self.client.load_table_from_dataframe(df, table_id, job_config=job_config)
         job.result()  # Wait for the job to complete
 
     def upload_all(
@@ -88,27 +94,3 @@ class BigQueryUploader:
 
         # 3. Finally, upload the sequence table
         self.upload_sequences(sequence_df)
-
-
-# uploader = BigQueryUploader(
-#     project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
-# )
-
-# with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
-#     data = f.read()
-# metadata = json.loads(data)
-
-
-# antibody_df = pd.read_csv(
-#     "/home/cameronhu/oas_onboarding/data/heavy_antibody_table.csv", index_col=0
-# )
-# seq_df = pd.read_csv(
-#     "/home/cameronhu/oas_onboarding/data/heavy_seq_table.csv", index_col=0
-# )
-
-# uploader.upload_all(metadata, antibody_df, seq_df)
-
-# table = uploader.client.get_table(
-#     f"{constants.GCP_PROJECT_ID}.{constants.DATASET_ID}.antibody"
-# )
-# print(table.schema)
