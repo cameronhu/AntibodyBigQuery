@@ -41,18 +41,3 @@ class Batch:
     def get_batches(self):
         """Return the generated batches."""
         return self.batches
-
-
-# Example usage:
-if __name__ == "__main__":
-    directory = "/path/to/your/csvgz/files"
-    max_batch_size = 10 * 1024 * 1024  # 10 MB
-    batch_generator = Batch(directory, max_batch_size)
-    batch_generator.generate_batches()
-    batches = batch_generator.get_batches()
-
-    # Output the batches
-    for i, batch in enumerate(batches):
-        print(f"Batch {i + 1}:")
-        for file in batch:
-            print(f"  {file}")
