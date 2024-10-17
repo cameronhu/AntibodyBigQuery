@@ -21,7 +21,7 @@ class DataManager:
         Initialize the manager with a list of file paths.
         """
         self.file_paths = file_paths
-        self.batch_metadata_df = pd.DataFrame()
+        self.batch_metadata = {}
         self.batch_antibody_df = pd.DataFrame()
         self.batch_sequence_df = pd.DataFrame()
 
@@ -32,12 +32,11 @@ class DataManager:
         for file_path in self.file_paths:
             # Instantiate OASDataProcessor for each file
             processor = OASDataProcessor(file_path)
-            metadata_df, antibody_df, sequence_df = processor.process_file()
+            metadata, antibody_df, sequence_df = processor.process_file()
 
             # Concatenate the results into the batch DataFrames
-            self.batch_metadata_df = pd.concat(
-                [self.batch_metadata_df, metadata_df], ignore_index=True
-            )
+            self.batch_metadata = {**self.batch_metadata, **metadata}
+
             self.batch_antibody_df = pd.concat(
                 [self.batch_antibody_df, antibody_df], ignore_index=True
             )
@@ -49,4 +48,4 @@ class DataManager:
         """
         Returns the batch DataFrames after processing.
         """
-        return self.batch_metadata_df, self.batch_antibody_df, self.batch_sequence_df
+        return self.batch_metadata, self.batch_antibody_df, self.batch_sequence_df
