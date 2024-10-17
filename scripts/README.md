@@ -18,7 +18,7 @@ Processing and uploading of 1 files completed in 36.87 seconds.
  Light processing took: 10.984614372253418 seconds
  ```
 
- ## Detailed breakdown of process vs upload
+ ### Detailed breakdown of process vs upload
 ```
 Function 'process_file' executed in 0.9166s
 Function 'upload_all' executed in 11.2491s
@@ -31,6 +31,20 @@ Processing and uploading of 1 files per paired, heavy, and light chains complete
  Heavy chain processing of 2 took: 9.48 seconds (process: 0.00 seconds, upload: 9.48 seconds)
  Light chain processing of 4098 took: 10.42 seconds (process: 0.21 seconds, upload: 10.21 seconds)
  ```
+
+22,008 sequences were uploaded over 32.06 seconds. ~686 sequences per second. ~2915452 seconds, ~809 hours, ~34 days
+
+## Timing test of DataManager implementation (manual batching)
+```
+Processing and uploading of 1 batches per paired, heavy, and light chains
+Total processing of 104800 completed in 57.27 seconds.
+
+Paired chain processing of 71316 sequences took: 28.00 seconds (process: 4.70 seconds, upload: 23.30 seconds)
+Heavy chain processing of 285 took: 9.67 seconds (process: 0.28 seconds, upload: 9.39 seconds)
+Light chain processing of 33199 took: 19.61 seconds (process: 3.08 seconds, upload: 16.53 seconds)
+```
+
+104,800 sequences in 57.27 seconds. ~1830 sequences / second. For 2 bill sequences, ~1092896 seconds, ~303.6 hours, ~12.6 days
 
  # Next Steps
 
