@@ -1,3 +1,11 @@
+"""
+Testing and timing script for first-pass implementation of process and load.
+Every OASDataProcessor processes one file, and for every processed file there are 3 calls 
+by BigQueryUploader to upload data to BigQuery
+
+Benchmarking indicates large BigQuery client bottleneck for time
+"""
+
 import sys
 
 sys.path.insert(0, "/home/cameronhu/oas_onboarding/utils")
