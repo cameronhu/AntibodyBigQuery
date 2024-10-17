@@ -70,44 +70,44 @@ if __name__ == "__main__":
 
     # Uncomment when testing real batches
 
-    # # Create Batch instances for each directory with desired max batch size
-    # max_batch_size = 1 * 1024 * 1024 * 1024  # 1 GB
-    # paired_batch = Batch(PAIRED_DIR, max_batch_size)
-    # unpaired_heavy_batch = Batch(UNPAIRED_HEAVY_DIR, max_batch_size)
-    # unpaired_light_batch = Batch(UNPAIRED_LIGHT_DIR, max_batch_size)
+    # Create Batch instances for each directory with desired max batch size
+    max_batch_size = 1 * 1024 * 1024 * 1024  # 1 GB
+    paired_batch = Batch(PAIRED_DIR, max_batch_size)
+    unpaired_heavy_batch = Batch(UNPAIRED_HEAVY_DIR, max_batch_size)
+    unpaired_light_batch = Batch(UNPAIRED_LIGHT_DIR, max_batch_size)
 
-    # # Generate batches
-    # paired_batch.generate_batches()
-    # unpaired_heavy_batch.generate_batches()
-    # unpaired_light_batch.generate_batches()
+    # Generate batches
+    paired_batch.generate_batches()
+    unpaired_heavy_batch.generate_batches()
+    unpaired_light_batch.generate_batches()
 
-    # # Splice batch list to num_batches parsed
-    # paired_batch_list = paired_batch.get_batches()[:num_batches]
-    # unpaired_heavy_batch_list = unpaired_heavy_batch.get_batches()[:num_batches]
-    # unpaired_light_batch_list = unpaired_light_batch.get_batches()[:num_batches]
+    # Splice batch list to num_batches parsed
+    paired_batch_list = paired_batch.get_batches()[:num_batches]
+    unpaired_heavy_batch_list = unpaired_heavy_batch.get_batches()[:num_batches]
+    unpaired_light_batch_list = unpaired_light_batch.get_batches()[:num_batches]
 
     # Make one manual batch for first test, just take the first 3 files from each directory
 
-    paired_files_local = sorted(os.listdir(PAIRED_DIR))
-    unpaired_heavy_files_local = sorted(os.listdir(UNPAIRED_HEAVY_DIR))
-    unpaired_light_files_local = sorted(os.listdir(UNPAIRED_LIGHT_DIR))
+    # paired_files_local = sorted(os.listdir(PAIRED_DIR))
+    # unpaired_heavy_files_local = sorted(os.listdir(UNPAIRED_HEAVY_DIR))
+    # unpaired_light_files_local = sorted(os.listdir(UNPAIRED_LIGHT_DIR))
 
-    paired_files = []
-    unpaired_heavy_files = []
-    unpaired_light_files = []
+    # paired_files = []
+    # unpaired_heavy_files = []
+    # unpaired_light_files = []
 
-    for file in paired_files_local:
-        paired_files.append(os.path.join(PAIRED_DIR, file))
+    # for file in paired_files_local:
+    #     paired_files.append(os.path.join(PAIRED_DIR, file))
 
-    for file in unpaired_heavy_files_local:
-        unpaired_heavy_files.append(os.path.join(UNPAIRED_HEAVY_DIR, file))
+    # for file in unpaired_heavy_files_local:
+    #     unpaired_heavy_files.append(os.path.join(UNPAIRED_HEAVY_DIR, file))
 
-    for file in unpaired_light_files_local:
-        unpaired_light_files.append(os.path.join(UNPAIRED_LIGHT_DIR, file))
+    # for file in unpaired_light_files_local:
+    #     unpaired_light_files.append(os.path.join(UNPAIRED_LIGHT_DIR, file))
 
-    paired_batch_list = [paired_files[:3]]
-    unpaired_heavy_batch_list = [unpaired_heavy_files[:3]]
-    unpaired_light_batch_list = [unpaired_light_files[:3]]
+    # paired_batch_list = [paired_files[:3]]
+    # unpaired_heavy_batch_list = [unpaired_heavy_files[:3]]
+    # unpaired_light_batch_list = [unpaired_light_files[:3]]
 
     # Process paired files in batches (limit by num_batches)
     paired_process_time, paired_upload_time, num_paired_sequences = feed_batches(
@@ -135,10 +135,18 @@ if __name__ == "__main__":
 
     total_sequences = num_heavy_sequences + num_light_sequences + num_paired_sequences
 
+    sequences_per_second = total_sequences / total_time
+
+    estimated_full_data_set_seconds = 2 * 10 ^ 9 / sequences_per_second
+    estimated_full_data_set_hours = estimated_full_data_set_seconds / (60 * 60)
+    estimated_full_data_set_days = estimated_full_data_set_hours / 24
+
     print(
         f"Processing and uploading of {num_batches} batches per paired, heavy, and light chains\n",
         f"Total processing of {total_sequences} completed in {total_time:.2f} seconds.\n\n"
         f"Paired chain processing of {num_paired_sequences} sequences took: {paired_process_time + paired_upload_time:.2f} seconds (process: {paired_process_time:.2f} seconds, upload: {paired_upload_time:.2f} seconds)\n",
         f"Heavy chain processing of {num_heavy_sequences} took: {heavy_process_time + heavy_upload_time:.2f} seconds (process: {heavy_process_time:.2f} seconds, upload: {heavy_upload_time:.2f} seconds)\n",
-        f"Light chain processing of {num_light_sequences} took: {light_process_time + light_upload_time:.2f} seconds (process: {light_process_time:.2f} seconds, upload: {light_upload_time:.2f} seconds)\n",
+        f"Light chain processing of {num_light_sequences} took: {light_process_time + light_upload_time:.2f} seconds (process: {light_process_time:.2f} seconds, upload: {light_upload_time:.2f} seconds)\n\n",
+        f"Sequence process and upload at rate of {sequences_per_second:.2f} sequences per second.\n",
+        f"Predicted time for full 2 * 10^9 OAS sequences to be processed: {estimated_full_data_set_seconds:.2f} seconds, {estimated_full_data_set_hours:.2f} hours, {estimated_full_data_set_days:.2f} days",
     )

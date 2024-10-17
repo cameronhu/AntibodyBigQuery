@@ -46,6 +46,8 @@ Light chain processing of 33199 took: 19.61 seconds (process: 3.08 seconds, uplo
 
 104,800 sequences in 57.27 seconds. ~1830 sequences / second. For 2 bill sequences, ~1092896 seconds, ~303.6 hours, ~12.6 days
 
+## Timing test of DataManager implementation (Batch class batching)
+
  # Next Steps
 
  Confirmed that the processing portion is not the bottleneck, but the upload into Google BigQuery is. Thus, should look into optimized/alternative uploading methods:
