@@ -55,7 +55,7 @@ class BigQueryTableCreator:
         table = bigquery.Table(table_id, schema=schema)
 
         # Create clustering based off species, chain, isotype
-        table.clustering_fields = ["Species", "Chain", "Isotype"]
+        table.clustering_fields = ["Chain", "Species", "Isotype"]
 
         self.client.create_table(table)
         print(f"Created table {table_id}")
@@ -67,7 +67,8 @@ class BigQueryTableCreator:
         self.create_sequence_table()
 
 
-table_creator = BigQueryTableCreator(
-    project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
-)
-table_creator.create_all_tables()
+if __name__ == "__main__":
+    table_creator = BigQueryTableCreator(
+        project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
+    )
+    table_creator.create_all_tables()
