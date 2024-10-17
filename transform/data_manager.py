@@ -1,5 +1,5 @@
 import pandas as pd
-from oas_data_processor import OASDataProcessor
+from transform.oas_data_processor import OASDataProcessor
 
 
 class DataManager:
