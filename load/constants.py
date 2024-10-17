@@ -173,7 +173,7 @@ METADATA_SCHEMA = [
     bigquery.SchemaField("Link", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("Author", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("Species", "STRING", "NULLABLE", None, None, (), None),
-    bigquery.SchemaField("Age", "INTEGER", "NULLABLE", None, None, (), None),
+    bigquery.SchemaField("Age", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("BSource", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("BType", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("Vaccine", "STRING", "NULLABLE", None, None, (), None),

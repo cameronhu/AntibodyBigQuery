@@ -52,7 +52,7 @@ class OASDataProcessor:
         """
         return [self.generate_uid() for _ in range(num_to_generate)]
 
-    def parse_metadata(self) -> dict:
+    def parse_metadata(self) -> pd.DataFrame:
         """Parses metadata from an OAS file and adds a unique identifier (UID)
 
         Args:
@@ -67,7 +67,7 @@ class OASDataProcessor:
         # Add a UID to the metadata
         metadata["metadata_id"] = self.generate_uid()
 
-        return metadata
+        return pd.json_normalize(metadata)
 
     def generate_antibody_data(self, num_to_generate: int) -> pd.DataFrame:
         """Generates an Antibody Table for this study. Creates a UUID for each entity in the study,

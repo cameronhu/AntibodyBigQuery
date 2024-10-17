@@ -26,6 +26,8 @@ def process_and_upload_batch(batch):
     # Unpack processed data
     metadata, antibody_df, sequence_df = data_manager.get_batch_dataframes()
 
+    print(metadata)
+
     # Count the number of sequences
     num_sequences = sequence_df.shape[0]
 
@@ -36,7 +38,7 @@ def process_and_upload_batch(batch):
     return process_time, upload_time, num_sequences
 
 
-# Function to
+# Function to enumerate the batch_list and time each batch
 def feed_batches(batch_list):
     total_process_time = 0
     total_upload_time = 0
