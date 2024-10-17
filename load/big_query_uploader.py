@@ -36,14 +36,13 @@ class BigQueryUploader:
         self.dataset_id = dataset_id
         self.client = bigquery.Client(project=self.project_id)
 
-    def upload_metadata(self, metadata: dict) -> None:
+    def upload_metadata(self, metadata_df: pd.DataFrame) -> None:
         """Uploads metadata to the Metadata table in BigQuery.
 
         Args:
             metadata (dict): Metadata dictionary with the structure {column_name: value}
         """
         table_id = f"{self.project_id}.{self.dataset_id}.metadata"
-        metadata_df = pd.DataFrame([metadata])
         self._upload_dataframe(metadata_df, table_id)
 
     def upload_antibodies(self, antibody_df: pd.DataFrame) -> None:
@@ -77,7 +76,10 @@ class BigQueryUploader:
         job.result()  # Wait for the job to complete
 
     def upload_all(
-        self, metadata: dict, antibody_df: pd.DataFrame, sequence_df: pd.DataFrame
+        self,
+        metadata_df: pd.DataFrame,
+        antibody_df: pd.DataFrame,
+        sequence_df: pd.DataFrame,
     ) -> None:
         """Uploads all three data tables (metadata, antibody, sequence) to BigQuery in the correct order.
 
@@ -87,7 +89,7 @@ class BigQueryUploader:
             sequence_df (pd.DataFrame): Sequence table DataFrame
         """
         # 1. Upload metadata first (as Antibody and Sequence depend on it)
-        self.upload_metadata(metadata)
+        self.upload_metadata(metadata_df)
 
         # 2. Upload antibody table (sequence table depends on it)
         self.upload_antibodies(antibody_df)

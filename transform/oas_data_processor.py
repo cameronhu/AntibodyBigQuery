@@ -30,8 +30,9 @@ class OASDataProcessor:
         """
         self.data_unit_file = data_unit_file
         self.metadata = self.parse_metadata()
-        self.metadata_id = self.metadata["metadata_id"]
-        self.is_paired = self.metadata["Chain"] == "Paired"
+        self.metadata_id = self.metadata["metadata_id"][0]
+        self.is_paired = self.metadata["Chain"][0] == "Paired"
+        print(self.is_paired)
 
     def generate_uid(self) -> str:
         """Unique Identifier generator function
