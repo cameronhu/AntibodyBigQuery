@@ -1,4 +1,4 @@
-import pandas as pd
+import fireducks.pandas as pd
 from transform.oas_data_processor import OASDataProcessor
 
 

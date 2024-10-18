@@ -1,4 +1,4 @@
-import pandas as pd
+import fireducks.pandas as pd
 import json
 import uuid
 from transform.constants import COLUMN_ORDER
@@ -32,7 +32,6 @@ class OASDataProcessor:
         self.metadata = self.parse_metadata()
         self.metadata_id = self.metadata["metadata_id"][0]
         self.is_paired = self.metadata["Chain"][0] == "Paired"
-        print(self.is_paired)
 
     def generate_uid(self) -> str:
         """Unique Identifier generator function
@@ -68,7 +67,9 @@ class OASDataProcessor:
         # Add a UID to the metadata
         metadata["metadata_id"] = self.generate_uid()
 
-        return pd.json_normalize(metadata)
+        metadata_df = pd.json_normalize(metadata)
+        metadata_df["Run"] = metadata_df["Run"].astype(str)
+        return metadata_df
 
     def generate_antibody_data(self, num_to_generate: int) -> pd.DataFrame:
         """Generates an Antibody Table for this study. Creates a UUID for each entity in the study,
