@@ -1,5 +1,5 @@
 from google.cloud import bigquery
-import fireducks.pandas as pd
+import pandas as pd
 import load.constants as constants
 import json
 

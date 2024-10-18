@@ -1,4 +1,4 @@
-import fireducks.pandas as pd
+import pandas as pd
 import json
 import uuid
 from transform.constants import COLUMN_ORDER
