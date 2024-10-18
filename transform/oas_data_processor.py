@@ -16,7 +16,7 @@ class OASDataProcessor:
     Attributes:
         data_unit_file (str): path to the OAS file to be processed
         metadata (json): metadata json associated with the file
-        metadata_id (int): UID of the metadata
+        metadata_id (str): UID of the metadata
         is_paired (bool): paired or unpaired chain type of the file being processed
         columnar_order
 

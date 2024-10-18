@@ -21,10 +21,6 @@ class BigQueryUploader:
         job_config (bigquery.LoadJobConfig): LoadJobConfig to be passed in to every upload, append only
     """
 
-    job_config = bigquery.LoadJobConfig(
-        write_disposition=bigquery.WriteDisposition.WRITE_APPEND
-    )
-
     def __init__(self, project_id: str, dataset_id: str):
         """Initializes the BigQueryUploader with the project and dataset information.
 
@@ -70,9 +66,11 @@ class BigQueryUploader:
             df (pd.DataFrame): DataFrame to upload
             table_id (str): Full BigQuery table ID in the format 'project.dataset.table'
         """
-        job = self.client.load_table_from_dataframe(
-            df, table_id, job_config=BigQueryUploader.job_config
+
+        job_config = bigquery.LoadJobConfig(
+            write_disposition=bigquery.WriteDisposition.WRITE_APPEND
         )
+        job = self.client.load_table_from_dataframe(df, table_id, job_config=job_config)
         job.result()  # Wait for the job to complete
 
     def upload_all(

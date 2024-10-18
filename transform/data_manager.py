@@ -35,7 +35,7 @@ class DataManager:
             metadata_df, antibody_df, sequence_df = processor.process_file()
 
             # Concatenate the results into the batch DataFrames
-            self.batch_metadata = pd.concat(
+            self.batch_metadata_df = pd.concat(
                 [self.batch_metadata_df, metadata_df], ignore_index=True
             )
 

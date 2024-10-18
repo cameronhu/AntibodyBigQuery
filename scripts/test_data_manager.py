@@ -24,16 +24,18 @@ def process_and_upload_batch(batch):
     _, process_time = timed_process()
 
     # Unpack processed data
-    metadata, antibody_df, sequence_df = data_manager.get_batch_dataframes()
+    metadata_df, antibody_df, sequence_df = data_manager.get_batch_dataframes()
 
-    print(metadata)
+    # metadata.to_csv("metadata.csv")
+    # antibody_df.to_csv("antibody_df.csv")
+    # sequence_df.to_csv("sequence_df.csv")
 
     # Count the number of sequences
     num_sequences = sequence_df.shape[0]
 
     # Upload to BigQuery, timing
     timed_uploader = timing_decorator(uploader.upload_all)
-    _, upload_time = timed_uploader(metadata, antibody_df, sequence_df)
+    _, upload_time = timed_uploader(metadata_df, antibody_df, sequence_df)
 
     return process_time, upload_time, num_sequences
 

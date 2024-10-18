@@ -34,6 +34,21 @@ Processing and uploading of 1 files per paired, heavy, and light chains complete
 
 22,008 sequences were uploaded over 32.06 seconds. ~686 sequences per second. ~2915452 seconds, ~809 hours, ~34 days
 
+### Breakdown with metadata as Dataframe instead of Json
+Function 'process_file' executed in 1.4373s
+Function 'upload_all' executed in 18.9563s
+Function 'process_file' executed in 0.0048s
+Function 'upload_all' executed in 7.8246s
+Function 'process_file' executed in 0.3267s
+Function 'upload_all' executed in 8.0602s
+Processing and uploading of 1 files per paired, heavy, and light chains completed in 36.61 seconds.
+ Paired chain processing of 17908 sequences took: 20.39 seconds (process: 1.44 seconds, upload: 18.96 seconds)
+ Heavy chain processing of 2 took: 7.83 seconds (process: 0.00 seconds, upload: 7.82 seconds)
+ Light chain processing of 4098 took: 8.39 seconds (process: 0.33 seconds, upload: 8.06 seconds)
+
+### Breakdown with metadata as Dataframe instead of Json, Fireducks
+
+
 ## Timing test of DataManager implementation (manual batching)
 ```
 Processing and uploading of 1 batches per paired, heavy, and light chains
