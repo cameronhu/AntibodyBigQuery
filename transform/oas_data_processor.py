@@ -69,6 +69,11 @@ class OASDataProcessor:
 
         metadata_df = pd.json_normalize(metadata)
         metadata_df["Run"] = metadata_df["Run"].astype(str)
+
+        # Convert the Age column to numeric, coercing errors to NaN, then convert to integer
+        metadata_df["Age"] = pd.to_numeric(metadata_df["Age"], errors="coerce").astype(
+            "Int64"
+        )
         return metadata_df
 
     def generate_antibody_data(self, num_to_generate: int) -> pd.DataFrame:
