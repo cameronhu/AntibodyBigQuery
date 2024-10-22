@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     sequences_per_second = total_sequences / total_time
 
-    estimated_full_data_set_seconds = 2 * 10 ^ 9 / sequences_per_second
+    estimated_full_data_set_seconds = 2 * 10**9 / sequences_per_second
     estimated_full_data_set_hours = estimated_full_data_set_seconds / (60 * 60)
     estimated_full_data_set_days = estimated_full_data_set_hours / 24
 
