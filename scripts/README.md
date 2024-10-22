@@ -63,9 +63,27 @@ Light chain processing of 33199 took: 19.61 seconds (process: 3.08 seconds, uplo
 
 ## Timing test of DataManager implementation (Batch class batching)
 
+Function 'process_files' executed in 159.0953s
+Function 'upload_all' executed in 129.3483s
+For batch 0, 1896620 processed, uploading took: 129.34832466000034, processing took: 159.0953004349999
+Function 'process_files' executed in 117.2710s
+Function 'upload_all' executed in 132.6003s
+For batch 0, 1905859 processed, uploading took: 132.60034026500034, processing took: 117.27096974100004
+Function 'process_files' executed in 113.9589s
+Function 'upload_all' executed in 133.2201s
+For batch 0, 1978491 processed, uploading took: 133.22009472900027, processing took: 113.95885420500053
+
+~ 4 days of processing time
+
  # Next Steps
 
  Confirmed that the processing portion is not the bottleneck, but the upload into Google BigQuery is. Thus, should look into optimized/alternative uploading methods:
 
  - Potentially upload all the files into GCP Buckets first 
  - Concatentate individual dataframes into a larger dataframe, with some limit for how long the dataframe will be. This will decrease the number of individual calls to upload to BigQuery but increase the amount of data uploaded per call.
+
+
+### Debugging Errors
+
+`DtypeWarning: Columns (109,125,126,127,128,155,191) have mixed types. Specify dtype option on import or set low_memory=False.
+  sequence_df = pd.read_csv(self.data_unit_file, header=1)`
