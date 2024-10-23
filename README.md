@@ -2,6 +2,12 @@
 
 Onboarding of the Observed Antibody Space sequencing data to the Profluent HCP environmnent
 
+## Usage
+The oas_onboarding package is pip installable. Package is built using setuptools as the backend, and details are store in the pyproject.toml. Navigate to the `oas_onboarding` root directory and run the following command in terminal:
+`pip install -e .`
+
+The load and transform subpackages should now be importable.
+
 ## Background
 
 The Observed Antibody Space database, or OAS, is a project to collect and annotate immune repertoires for use in large-scale analysis. It currently contains over one billion sequences, from over 80 different studies. These repertoires cover diverse immune states, organisms (primarily human and mouse), and individuals. The OAS database provides clean, annotated, translated antibody repertoire data in a unified format that adheres to the AIRR-seq (Adaptive Immune Receptor Repertoire Sequencing) standards. OAS contains both unpaired VH and VL data, as well as paired VH/VL data. The amount of unpaired data is significantly larger due to higher throughput capabilities of Illumina sequencing versus 10xGenomics sequencing (required for paired chain data). 
