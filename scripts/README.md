@@ -112,14 +112,13 @@ Paired chain processing of 3908158 sequences took: 622.53 seconds (process: 330.
  Sequence process and upload at rate of 8328.34 sequences per second.
  Predicted time for full 2 * 10^9 OAS sequences to be processed: 240143.87 seconds, 66.71 hours, 2.78 days
 
-
 ## Sanity Checks
 
 For testing with 5 batches in the test_data_manager.py script.
 
 **Human Paired Sequences** - A total of 3,908,158 paired human "sequences" were processed and uploaded. There are 1,954,079 paired human sequences in OAS. For the sequence table, the heavy and light chains are split, leading to double the number of sequences. 1,954,079 * 2 = 3,908,158. This sanity check passes.
 
-**Metadata Files** - There should be the same number of metdata entries as files parsed. Checking the batch lists and counting the number of files is N files. This is equal to the M metadata entries in BigQuery.
+**Metadata Files** - There should be the same number of metdata entries as files parsed. Checking the batch lists and counting the number of files: 345 files. This is equal to the 345 metadata entries in BigQuery. This sanity check passes.
 
  # Next Steps
 
