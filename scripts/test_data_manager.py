@@ -37,6 +37,11 @@ def process_and_upload_batch(batch):
     timed_uploader = timing_decorator(uploader.upload_all)
     _, upload_time = timed_uploader(metadata_df, antibody_df, sequence_df)
 
+    # Cleanup memory
+
+    del metadata_df, antibody_df, sequence_df, data_manager
+    gc.collect()
+
     return process_time, upload_time, num_sequences
 
 

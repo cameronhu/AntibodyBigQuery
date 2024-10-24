@@ -75,13 +75,58 @@ For batch 0, 1978491 processed, uploading took: 133.22009472900027, processing t
 
 ~ 4 days of processing time
 
+## Memory and timing test for increased batches (5)
+
+Need to ensure enough RAM for Pandas processes when running the major job. Want to also document the maximum amount of memory used for the 5 batches.
+
+From personal observation via `htop`, the max RAM used occurs during merge operations and I think uploading operations. Max RAM used personally observed got up to 50 GB out of the 98.2 GB
+
+### Timing
+Function 'upload_all' executed in 9.4270s
+For batch 3, 594 processed, uploading took: 9.42696184500005, processing took: 0.08975392399997872
+Function 'process_files' executed in 238.9650s                                  
+Function 'upload_all' executed in 187.4388s
+For batch 4, 4030641 processed, uploading took: 187.43884475899995, processing took: 238.9649895030002
+Function 'process_files' executed in 112.8231s
+Function 'upload_all' executed in 133.4009s                                                    
+For batch 0, 1978491 processed, uploading took: 133.4009297810003, processing took: 112.82306368299987
+Function 'process_files' executed in 126.2715s
+Function 'upload_all' executed in 125.0341s
+For batch 1, 2173960 processed, uploading took: 125.03410934299973, processing took: 126.2715166920002
+Function 'process_files' executed in 250.4073s
+Function 'upload_all' executed in 205.2993s
+For batch 2, 4446576 processed, uploading took: 205.299349806, processing took: 250.4073148829998
+Function 'process_files' executed in 110.0403s
+Function 'upload_all' executed in 138.8709s
+For batch 3, 1980461 processed, uploading took: 138.87089849199992, processing took: 110.04027091399985
+Function 'process_files' executed in 116.9063s
+Function 'upload_all' executed in 129.4772s
+For batch 4, 2187713 processed, uploading took: 129.4772040849998, processing took: 116.90629718499986
+Processing and uploading of 5 batches per paired, heavy, and light chains
+ Total processing of 26826785 completed in 3221.14 seconds.
+
+Paired chain processing of 3908158 sequences took: 622.53 seconds (process: 330.78 seconds, upload: 291.75 seconds)
+ Heavy chain processing of 10151426 took: 1150.08 seconds (process: 583.01 seconds, upload: 567.07 seconds)
+ Light chain processing of 12767201 took: 1448.53 seconds (process: 716.45 seconds, upload: 732.08 seconds)
+
+ Sequence process and upload at rate of 8328.34 sequences per second.
+ Predicted time for full 2 * 10^9 OAS sequences to be processed: 240143.87 seconds, 66.71 hours, 2.78 days
+
+
+## Sanity Checks
+
+For testing with 5 batches in the test_data_manager.py script.
+
+**Human Paired Sequences** - A total of 3,908,158 paired human "sequences" were processed and uploaded. There are 1,954,079 paired human sequences in OAS. For the sequence table, the heavy and light chains are split, leading to double the number of sequences. 1,954,079 * 2 = 3,908,158. This sanity check passes.
+
+**Metadata Files** - There should be the same number of metdata entries as files parsed. Checking the batch lists and counting the number of files is N files. This is equal to the M metadata entries in BigQuery.
+
  # Next Steps
 
  Confirmed that the processing portion is not the bottleneck, but the upload into Google BigQuery is. Thus, should look into optimized/alternative uploading methods:
 
  - Potentially upload all the files into GCP Buckets first 
  - Concatentate individual dataframes into a larger dataframe, with some limit for how long the dataframe will be. This will decrease the number of individual calls to upload to BigQuery but increase the amount of data uploaded per call.
-
 
 ### Debugging Errors
 
