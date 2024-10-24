@@ -46,6 +46,14 @@ class DataManager:
                 [self.batch_sequence_df, sequence_df], ignore_index=True
             )
 
+    def clear_dataframes(self):
+        """
+        Clear the batch DataFrames to free up memory.
+        """
+        self.batch_metadata_df = None
+        self.batch_antibody_df = None
+        self.batch_sequence_df = None
+
     def get_batch_dataframes(self):
         """
         Returns the batch DataFrames after processing.

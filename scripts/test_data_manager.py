@@ -37,6 +37,8 @@ def process_and_upload_batch(batch):
     timed_uploader = timing_decorator(uploader.upload_all)
     _, upload_time = timed_uploader(metadata_df, antibody_df, sequence_df)
 
+    data_manager.clear_dataframes()
+
     # Cleanup memory
 
     del metadata_df, antibody_df, sequence_df, data_manager
