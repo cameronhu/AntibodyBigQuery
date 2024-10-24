@@ -183,11 +183,11 @@ class OASDataProcessor:
         if self.is_paired:
             sequence_df = self.process_paired_sequences(sequence_df)
         else:
-            sequence_df["Chain"] = self.metadata["Chain"]
-            sequence_df["Isotype"] = self.metadata["Isotype"]
+            sequence_df["Chain"] = self.metadata["Chain"][0]
+            sequence_df["Isotype"] = self.metadata["Isotype"][0]
             sequence_df["sequence_id"] = self.generate_uid_list(num_seqs)
 
-        sequence_df["Species"] = self.metadata["Species"]
+        sequence_df["Species"] = self.metadata["Species"][0]
 
         return sequence_df, antibody_df
 
