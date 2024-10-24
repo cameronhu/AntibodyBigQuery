@@ -1,7 +1,7 @@
 import sys
-import os
 import time
 import argparse
+import gc
 
 sys.path.insert(0, "/home/cameronhu/oas_onboarding/utils")
 
@@ -56,6 +56,9 @@ def feed_batches(batch_list):
         print(
             f"For batch {i}, {num_sequences} processed, uploading took: {upload_time}, processing took: {process_time}"
         )
+
+        del batch
+        gc.collect()
 
     return total_process_time, total_upload_time, total_sequences
 
