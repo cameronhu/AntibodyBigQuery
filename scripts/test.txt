@@ -1,0 +1,71 @@
+/home/cameronhu/oas_onboarding/transform/oas_data_processor.py:176: DtypeWarning: Columns (109,125,126,127,128,155,191) have mixed types. Specify dtype option on import or set low_memory=False.
+  sequence_df = pd.read_csv(self.data_unit_file, header=1)
+/home/cameronhu/oas_onboarding/transform/oas_data_processor.py:176: DtypeWarning: Columns (109,125,126,127,128,155,191) have mixed types. Specify dtype option on import or set low_memory=False.
+  sequence_df = pd.read_csv(self.data_unit_file, header=1)
+/home/cameronhu/oas_onboarding/transform/oas_data_processor.py:176: DtypeWarning: Columns (109,125,126,127,128,155,191) have mixed types. Specify dtype option on import or set low_memory=False.
+  sequence_df = pd.read_csv(self.data_unit_file, header=1)
+/home/cameronhu/oas_onboarding/transform/oas_data_processor.py:176: DtypeWarning: Columns (109,125,126,127,128,155) have mixed types. Specify dtype option on import or set low_memory=False.
+  sequence_df = pd.read_csv(self.data_unit_file, header=1)
+/home/cameronhu/oas_onboarding/transform/oas_data_processor.py:176: DtypeWarning: Columns (109,125,126,127,128,155,191) have mixed types. Specify dtype option on import or set low_memory=False.
+  sequence_df = pd.read_csv(self.data_unit_file, header=1)
+Function 'process_files' executed in 174.8552s
+Function 'upload_all' executed in 152.6694s
+Pre-cleanup memory usage: 10.66 GB, post-cleanup memory usage: 7.35
+For batch 0, 1896620 processed, uploading took: 152.66941039299854, processing took: 174.85516239299977
+Function 'process_files' executed in 169.7616s
+Function 'upload_all' executed in 127.6712s
+Pre-cleanup memory usage: 10.93 GB, post-cleanup memory usage: 7.72
+For batch 1, 1880010 processed, uploading took: 127.67115893099981, processing took: 169.76158120400032
+Function 'process_files' executed in 6.9230s
+Function 'upload_all' executed in 31.5653s
+Pre-cleanup memory usage: 7.69 GB, post-cleanup memory usage: 7.66
+For batch 2, 131528 processed, uploading took: 31.565252944999884, processing took: 6.9230083570000716
+Function 'process_files' executed in 109.6194s
+Function 'upload_all' executed in 142.0468s
+Pre-cleanup memory usage: 12.49 GB, post-cleanup memory usage: 7.72
+For batch 0, 1905859 processed, uploading took: 142.04682934000084, processing took: 109.61939811500088
+Function 'process_files' executed in 6.7776s
+Function 'upload_all' executed in 21.0722s
+Pre-cleanup memory usage: 7.69 GB, post-cleanup memory usage: 7.67
+For batch 1, 120959 processed, uploading took: 21.07216700400022, processing took: 6.777618505999271
+Function 'process_files' executed in 225.9950s
+Function 'upload_all' executed in 205.1925s
+Pre-cleanup memory usage: 24.38 GB, post-cleanup memory usage: 10.09
+For batch 2, 4093373 processed, uploading took: 205.1924813450005, processing took: 225.99502279899934
+Function 'process_files' executed in 0.0483s
+Function 'upload_all' executed in 9.7424s
+Pre-cleanup memory usage: 10.06 GB, post-cleanup memory usage: 10.05
+For batch 3, 594 processed, uploading took: 9.742446299000221, processing took: 0.04827977499917324
+Function 'process_files' executed in 245.9683s
+Function 'upload_all' executed in 216.4440s
+Pre-cleanup memory usage: 22.72 GB, post-cleanup memory usage: 10.13
+For batch 4, 4030641 processed, uploading took: 216.44400523500008, processing took: 245.96826718800003
+Function 'process_files' executed in 111.1860s
+Function 'upload_all' executed in 128.7760s
+Pre-cleanup memory usage: 13.68 GB, post-cleanup memory usage: 10.05
+For batch 0, 1978491 processed, uploading took: 128.77602062999904, processing took: 111.18595409699992
+Function 'process_files' executed in 119.1415s
+Function 'upload_all' executed in 144.8443s
+Pre-cleanup memory usage: 14.23 GB, post-cleanup memory usage: 10.03
+For batch 1, 2173960 processed, uploading took: 144.84429368499877, processing took: 119.14145931699932
+Function 'process_files' executed in 252.3209s
+Function 'upload_all' executed in 203.2873s
+Pre-cleanup memory usage: 22.89 GB, post-cleanup memory usage: 10.93
+For batch 2, 4446576 processed, uploading took: 203.28725097299866, processing took: 252.32094466499984
+Function 'process_files' executed in 107.2809s
+Function 'upload_all' executed in 131.9807s
+Pre-cleanup memory usage: 14.18 GB, post-cleanup memory usage: 10.89
+For batch 3, 1980461 processed, uploading took: 131.98070559299958, processing took: 107.28093643400098
+Function 'process_files' executed in 115.2938s
+Function 'upload_all' executed in 126.7641s
+Pre-cleanup memory usage: 14.84 GB, post-cleanup memory usage: 10.92
+For batch 4, 2187713 processed, uploading took: 126.76412266299849, processing took: 115.29383286699886
+Processing and uploading of 5 batches per paired, heavy, and light chains
+ Total processing of 26826785 completed in 3287.23 seconds.
+
+Paired chain processing of 3908158 sequences took: 663.45 seconds (process: 351.54 seconds, upload: 311.91 seconds)
+ Heavy chain processing of 10151426 took: 1182.91 seconds (process: 588.41 seconds, upload: 594.50 seconds)
+ Light chain processing of 12767201 took: 1440.88 seconds (process: 705.22 seconds, upload: 735.65 seconds)
+
+ Sequence process and upload at rate of 8160.91 sequences per second.
+ Predicted time for full 2 * 10^9 OAS sequences to be processed: 245070.56 seconds, 68.08 hours, 2.84 days
