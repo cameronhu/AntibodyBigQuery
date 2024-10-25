@@ -1,3 +1,11 @@
+"""
+Testing and timing script for first-pass implementation of process and load.
+Every OASDataProcessor processes one file, and for every processed file there are 3 calls 
+by BigQueryUploader to upload data to BigQuery
+
+Benchmarking indicates large BigQuery client bottleneck for time
+"""
+
 import sys
 
 sys.path.insert(0, "/home/cameronhu/oas_onboarding/utils")
@@ -10,15 +18,7 @@ from load import constants
 from timing_decorator import timing_decorator
 import argparse
 
-
-# Constants for directories
-PAIRED_DIR = "/export/share/cameronhu/oas/paired/paired_human"
-UNPAIRED_HEAVY_DIR = (
-    "/export/share/cameronhu/oas/unpaired/unpaired_human/unpaired_human_heavy"
-)
-UNPAIRED_LIGHT_DIR = (
-    "/export/share/cameronhu/oas/unpaired/unpaired_human/unpaired_human_light"
-)
+from const_directories import *
 
 
 # Function to process and upload a single file

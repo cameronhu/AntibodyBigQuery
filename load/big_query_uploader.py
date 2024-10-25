@@ -16,6 +16,9 @@ class BigQueryUploader:
         project_id (str): GCP project ID where the BigQuery dataset is located
         dataset_id (str): BigQuery dataset ID where the tables reside
         client (bigquery.Client): BigQuery client instance for interaction
+
+    Instance Variables:
+        job_config (bigquery.LoadJobConfig): LoadJobConfig to be passed in to every upload, append only
     """
 
     def __init__(self, project_id: str, dataset_id: str):
@@ -29,14 +32,13 @@ class BigQueryUploader:
         self.dataset_id = dataset_id
         self.client = bigquery.Client(project=self.project_id)
 
-    def upload_metadata(self, metadata: dict) -> None:
+    def upload_metadata(self, metadata_df: pd.DataFrame) -> None:
         """Uploads metadata to the Metadata table in BigQuery.
 
         Args:
             metadata (dict): Metadata dictionary with the structure {column_name: value}
         """
         table_id = f"{self.project_id}.{self.dataset_id}.metadata"
-        metadata_df = pd.DataFrame([metadata])
         self._upload_dataframe(metadata_df, table_id)
 
     def upload_antibodies(self, antibody_df: pd.DataFrame) -> None:
@@ -64,6 +66,7 @@ class BigQueryUploader:
             df (pd.DataFrame): DataFrame to upload
             table_id (str): Full BigQuery table ID in the format 'project.dataset.table'
         """
+
         job_config = bigquery.LoadJobConfig(
             write_disposition=bigquery.WriteDisposition.WRITE_APPEND
         )
@@ -71,7 +74,10 @@ class BigQueryUploader:
         job.result()  # Wait for the job to complete
 
     def upload_all(
-        self, metadata: dict, antibody_df: pd.DataFrame, sequence_df: pd.DataFrame
+        self,
+        metadata_df: pd.DataFrame,
+        antibody_df: pd.DataFrame,
+        sequence_df: pd.DataFrame,
     ) -> None:
         """Uploads all three data tables (metadata, antibody, sequence) to BigQuery in the correct order.
 
@@ -81,34 +87,10 @@ class BigQueryUploader:
             sequence_df (pd.DataFrame): Sequence table DataFrame
         """
         # 1. Upload metadata first (as Antibody and Sequence depend on it)
-        self.upload_metadata(metadata)
+        self.upload_metadata(metadata_df)
 
         # 2. Upload antibody table (sequence table depends on it)
         self.upload_antibodies(antibody_df)
 
         # 3. Finally, upload the sequence table
         self.upload_sequences(sequence_df)
-
-
-# uploader = BigQueryUploader(
-#     project_id=constants.GCP_PROJECT_ID, dataset_id=constants.DATASET_ID
-# )
-
-# with open("/home/cameronhu/oas_onboarding/data/metadata.json", "r") as f:
-#     data = f.read()
-# metadata = json.loads(data)
-
-
-# antibody_df = pd.read_csv(
-#     "/home/cameronhu/oas_onboarding/data/heavy_antibody_table.csv", index_col=0
-# )
-# seq_df = pd.read_csv(
-#     "/home/cameronhu/oas_onboarding/data/heavy_seq_table.csv", index_col=0
-# )
-
-# uploader.upload_all(metadata, antibody_df, seq_df)
-
-# table = uploader.client.get_table(
-#     f"{constants.GCP_PROJECT_ID}.{constants.DATASET_ID}.antibody"
-# )
-# print(table.schema)

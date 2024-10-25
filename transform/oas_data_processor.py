@@ -16,7 +16,7 @@ class OASDataProcessor:
     Attributes:
         data_unit_file (str): path to the OAS file to be processed
         metadata (json): metadata json associated with the file
-        metadata_id (int): UID of the metadata
+        metadata_id (str): UID of the metadata
         is_paired (bool): paired or unpaired chain type of the file being processed
         columnar_order
 
@@ -30,8 +30,8 @@ class OASDataProcessor:
         """
         self.data_unit_file = data_unit_file
         self.metadata = self.parse_metadata()
-        self.metadata_id = self.metadata["metadata_id"]
-        self.is_paired = self.metadata["Chain"] == "Paired"
+        self.metadata_id = self.metadata["metadata_id"][0]
+        self.is_paired = self.metadata["Chain"][0] == "Paired"
 
     def generate_uid(self) -> str:
         """Unique Identifier generator function
@@ -52,7 +52,7 @@ class OASDataProcessor:
         """
         return [self.generate_uid() for _ in range(num_to_generate)]
 
-    def parse_metadata(self) -> dict:
+    def parse_metadata(self) -> pd.DataFrame:
         """Parses metadata from an OAS file and adds a unique identifier (UID)
 
         Args:
@@ -67,7 +67,14 @@ class OASDataProcessor:
         # Add a UID to the metadata
         metadata["metadata_id"] = self.generate_uid()
 
-        return metadata
+        metadata_df = pd.json_normalize(metadata)
+        metadata_df["Run"] = metadata_df["Run"].astype(str)
+
+        # Convert the Age column to numeric, coercing errors to NaN, then convert to integer
+        metadata_df["Age"] = pd.to_numeric(metadata_df["Age"], errors="coerce").astype(
+            "Int64"
+        )
+        return metadata_df
 
     def generate_antibody_data(self, num_to_generate: int) -> pd.DataFrame:
         """Generates an Antibody Table for this study. Creates a UUID for each entity in the study,
@@ -176,11 +183,11 @@ class OASDataProcessor:
         if self.is_paired:
             sequence_df = self.process_paired_sequences(sequence_df)
         else:
-            sequence_df["Chain"] = self.metadata["Chain"]
-            sequence_df["Isotype"] = self.metadata["Isotype"]
+            sequence_df["Chain"] = self.metadata["Chain"][0]
+            sequence_df["Isotype"] = self.metadata["Isotype"][0]
             sequence_df["sequence_id"] = self.generate_uid_list(num_seqs)
 
-        sequence_df["Species"] = self.metadata["Species"]
+        sequence_df["Species"] = self.metadata["Species"][0]
 
         return sequence_df, antibody_df
 

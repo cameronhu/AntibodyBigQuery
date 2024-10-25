@@ -169,7 +169,7 @@ SEQUENCE_SCHEMA = [
 ]
 
 METADATA_SCHEMA = [
-    bigquery.SchemaField("Run", "INTEGER", "NULLABLE", None, None, (), None),
+    bigquery.SchemaField("Run", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("Link", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("Author", "STRING", "NULLABLE", None, None, (), None),
     bigquery.SchemaField("Species", "STRING", "NULLABLE", None, None, (), None),
