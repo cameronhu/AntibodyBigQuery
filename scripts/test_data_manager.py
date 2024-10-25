@@ -2,6 +2,7 @@ import sys
 import time
 import argparse
 import gc
+import psutil
 
 sys.path.insert(0, "/home/cameronhu/oas_onboarding/utils")
 
@@ -12,6 +13,12 @@ from timing_decorator import timing_decorator
 from const_directories import *
 from transform.batch import Batch  # Import the Batch class
 from transform.data_manager import DataManager  # Import the DataManager class
+
+
+def get_memory_usage():
+    process = psutil.Process()
+    mem_info = process.memory_info()
+    return mem_info.rss / (1024**3)  # Convert to GB
 
 
 # Function to process and upload a single batch of files using DataManager
@@ -37,12 +44,20 @@ def process_and_upload_batch(batch):
     timed_uploader = timing_decorator(uploader.upload_all)
     _, upload_time = timed_uploader(metadata_df, antibody_df, sequence_df)
 
+    precleanmemory_usage = get_memory_usage()
+
     data_manager.clear_dataframes()
 
     # Cleanup memory
 
     del metadata_df, antibody_df, sequence_df, data_manager
     gc.collect()
+
+    postcleanmemory_usage = get_memory_usage()
+
+    print(
+        f"Pre-cleanup memory usage: {precleanmemory_usage:.2f} GB, post-cleanup memory usage: {postcleanmemory_usage:.2f}",
+    )
 
     return process_time, upload_time, num_sequences
 
