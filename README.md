@@ -1,6 +1,6 @@
 # Observed Antibody Space Sequence Onboarding
 
-Onboarding of the Observed Antibody Space sequencing data to the Profluent HCP environmnent
+Onboarding of the Observed Antibody Space sequencing data to GCP BigQuery
 
 ## Usage
 The oas_onboarding package is pip installable. Package is built using setuptools as the backend, and details are store in the pyproject.toml. Navigate to the `oas_onboarding` root directory and run the following command in terminal:
